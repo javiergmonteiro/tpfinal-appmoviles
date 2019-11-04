@@ -15,6 +15,9 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import com.example.myapplication.databases.DatabaseHelper;
 
+import com.example.myapplication.dummy.DummyContent;
+
+import java.util.List;
 
 public class MainActivity extends Activity  {
     Button b1,b2;
@@ -24,12 +27,18 @@ public class MainActivity extends Activity  {
 
     private static final String SHARED_PREF_NAME = "username";
     private static final String KEY_NAME = "key_username";
-
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main);        
+        
+        DummyContent dummyContent = new DummyContent();
 
+        dummyContent.addItem(new DummyContent.DummyItem("1","Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen","source","javier"));
+        dummyContent.addItem(new DummyContent.DummyItem("2","Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen","source2", "javier"));
+        dummyContent.addItem(new DummyContent.DummyItem("3","Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen","source3", "javier"));
+        
         b1 = (Button)findViewById(R.id.button);
         ed1 = (EditText)findViewById(R.id.editText);
         ed2 = (EditText)findViewById(R.id.editText2);
