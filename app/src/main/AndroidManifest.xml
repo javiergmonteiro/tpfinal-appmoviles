@@ -39,6 +39,7 @@
                 android:value="com.example.myapplication.ItemListActivity" />
         </activity>
         <activity android:name=".NewItemActivity"/>
+        <activity android:name=".RegisterActivity"/>
     </application>
 
 </manifest>

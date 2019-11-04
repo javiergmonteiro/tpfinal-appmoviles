@@ -1,15 +1,18 @@
 package com.example.myapplication;
 
 import android.app.Activity;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.myapplication.dummy.DummyContent;
@@ -51,10 +54,16 @@ public class ItemDetailFragment extends Fragment {
 
             Activity activity = this.getActivity();
             CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
+            appBarLayout.setCollapsedTitleTextAppearance(R.style.CollapsedAppBar);
+            appBarLayout.setExpandedTitleTextAppearance(R.style.ExpandedAppBar);
             if (appBarLayout != null) {
-                appBarLayout.setTitle(mItem.description);
+                appBarLayout.setTitle("Publicación de " + mItem.author_name);
             }
         }
+    }
+
+    public int getImageID(String imageName){
+        return getResources().getIdentifier("drawable/" + imageName, null, getActivity().getPackageName());
     }
 
     @Override
@@ -65,6 +74,7 @@ public class ItemDetailFragment extends Fragment {
         // Show the dummy content as text in a TextView.
         if (mItem != null) {
             ((TextView) rootView.findViewById(R.id.item_detail)).setText(mItem.description);
+            ((ImageView) rootView.findViewById(R.id.item_image)).setImageResource(getImageID(mItem.image));
         }
 
         return rootView;

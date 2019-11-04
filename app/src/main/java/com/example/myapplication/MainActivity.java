@@ -2,6 +2,7 @@ package com.example.myapplication;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -21,6 +22,9 @@ public class MainActivity extends Activity  {
     TextView tx1;
     DatabaseHelper helper;
 
+    private static final String SHARED_PREF_NAME = "username";
+    private static final String KEY_NAME = "key_username";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,10 +34,15 @@ public class MainActivity extends Activity  {
         ed1 = (EditText)findViewById(R.id.editText);
         ed2 = (EditText)findViewById(R.id.editText2);
         b2 = (Button)findViewById(R.id.button2);
-        tx1 = (TextView)findViewById(R.id.button2);
-        tx1.setVisibility(View.GONE);
+        // tx1 = (TextView)findViewById(R.id.button2);
+        // tx1.setVisibility(View.GONE);
         helper = new DatabaseHelper(this);
-
+        SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+        if (sp.getString(KEY_NAME,null) != null){
+            Intent home = new Intent(MainActivity.this, ItemListActivity.class);
+            startActivity(home);
+            finish();
+        }
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -41,17 +50,29 @@ public class MainActivity extends Activity  {
                 String password = ed2.getText().toString();
                 SQLiteDatabase db = helper.open();
                 String[] args = new String[]{user,password};
-                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
                 Cursor c = db.rawQuery("SELECT * FROM USERS where ( user = ? and password= ?)",args);
                 if (c.moveToFirst()){
+                    SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.putString(KEY_NAME, user);
+                    editor.apply();
                     Intent home = new Intent(MainActivity.this, ItemListActivity.class);
                     startActivity(home);
+                    finish();
                 }
                 else{
+                    AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
                     alertDialog.setMessage("incorrect login");
                     alertDialog.show();
                 }
+            }
+        });
 
+        b2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent register = new Intent(MainActivity.this, RegisterActivity.class);
+                startActivity(register);
             }
         });
     }

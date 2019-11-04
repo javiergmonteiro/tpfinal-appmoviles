@@ -1,7 +1,10 @@
 package com.example.myapplication;
 
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.icu.util.MeasureUnit;
 import android.media.Image;
 import android.os.Bundle;
 
@@ -14,6 +17,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -39,6 +45,10 @@ public class ItemListActivity extends AppCompatActivity {
      * device.
      */
     private boolean mTwoPane;
+    private SharedPreferences mySharedPreferences;
+    private SharedPreferences.Editor mEditor;
+    private static final String SHARED_PREF_NAME = "username";
+    private static final String KEY_NAME = "key_username";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +83,33 @@ public class ItemListActivity extends AppCompatActivity {
         View recyclerView = findViewById(R.id.item_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()){
+            case R.id.logout:
+                logout();
+                return true;
+                default:
+                    return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void logout() {
+        mySharedPreferences = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+        mEditor = mySharedPreferences.edit();
+        mEditor.clear().commit();
+        Intent Main = new Intent(ItemListActivity.this, MainActivity.class);
+        startActivity(Main);
+        finish();
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
