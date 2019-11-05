@@ -1,6 +1,8 @@
 package com.example.myapplication;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -12,10 +14,15 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.myapplication.dummy.DummyContent;
+import com.example.myapplication.ItemDetailActivity;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * A fragment representing a single Item detail screen.
@@ -29,6 +36,10 @@ public class ItemDetailFragment extends Fragment {
      * represents.
      */
     public static final String ARG_ITEM_ID = "item_id";
+    private SharedPreferences mySharedPreferences;
+    private SharedPreferences.Editor mEditor;
+    private static final String SHARED_PREF_NAME = "username";
+    private static final String KEY_NAME = "key_username";
 
     /**
      * The dummy content this fragment is presenting.
@@ -45,6 +56,7 @@ public class ItemDetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mySharedPreferences = this.getActivity().getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
 
         if (getArguments().containsKey(ARG_ITEM_ID)) {
             // Load the dummy content specified by the fragment
@@ -72,6 +84,9 @@ public class ItemDetailFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.item_detail, container, false);
 
         // Show the dummy content as text in a TextView.
+        if (!(mySharedPreferences.getString(KEY_NAME,null).equals(mItem.author_name))){
+            ((ItemDetailActivity)getActivity()).hideFab();
+        }
         if (mItem != null) {
             ((TextView) rootView.findViewById(R.id.item_detail)).setText(mItem.description);
             ((ImageView) rootView.findViewById(R.id.item_image)).setImageResource(getImageID(mItem.image));

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.icu.util.RangeValueIterator;
 import android.os.Bundle;
 import android.view.View;
 
@@ -31,22 +32,35 @@ public class MainActivity extends Activity  {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);        
-        
-        DummyContent dummyContent = new DummyContent();
+        setContentView(R.layout.activity_main);
+        helper = new DatabaseHelper(this);
+        SQLiteDatabase db = helper.open();
 
-        dummyContent.addItem(new DummyContent.DummyItem("1","Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen","source","javier"));
-        dummyContent.addItem(new DummyContent.DummyItem("2","Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen","source2", "javier"));
-        dummyContent.addItem(new DummyContent.DummyItem("3","Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen","source3", "javier"));
+        DummyContent dummyContent = new DummyContent();
+        SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+
+        dummyContent.removeItems();
+
+        Cursor c = db.rawQuery("SELECT * FROM moments",null);
+            for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
+                String id = c.getString(0);
+                String autor = c.getString(1);
+                String descripcion = c.getString(2);
+                String tags = c.getString(3);
+                String image = c.getString(4);
+                String date = c.getString(5);
+                dummyContent.addItem(new DummyContent.DummyItem(id,descripcion,image,autor));
+            }
+
+        //dummyContent.addItem(new DummyContent.DummyItem("1","Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen","source1","javier"));
+        //dummyContent.addItem(new DummyContent.DummyItem("2","Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen","source2", "javier"));
+        //dummyContent.addItem(new DummyContent.DummyItem("3","Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen","source3", "javier"));
         
         b1 = (Button)findViewById(R.id.button);
         ed1 = (EditText)findViewById(R.id.editText);
         ed2 = (EditText)findViewById(R.id.editText2);
         b2 = (Button)findViewById(R.id.button2);
-        // tx1 = (TextView)findViewById(R.id.button2);
-        // tx1.setVisibility(View.GONE);
-        helper = new DatabaseHelper(this);
-        SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+
         if (sp.getString(KEY_NAME,null) != null){
             Intent home = new Intent(MainActivity.this, ItemListActivity.class);
             startActivity(home);

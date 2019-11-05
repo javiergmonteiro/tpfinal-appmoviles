@@ -28,7 +28,7 @@ public class DummyContent {
     private static final int COUNT = 25;
 
     /*static {
-        addItem(new DummyItem("1","Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen","source","javier"));
+        addItem(new DummyItem("1","Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen","source1","javier"));
         addItem(new DummyItem("2","Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen","source2", "javier"));
         addItem(new DummyItem("3","Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen","source3", "javier"));
     }*/
@@ -36,6 +36,11 @@ public class DummyContent {
     public static void addItem(DummyItem item) {
         ITEMS.add(item);
         ITEM_MAP.put(item.id, item);
+    }
+
+    public static void removeItems(){
+        ITEMS.clear();
+        ITEM_MAP.clear();
     }
 
     //private static DummyItem createDummyItem(int position) {
