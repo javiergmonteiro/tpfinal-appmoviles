@@ -1,26 +1,31 @@
 package com.example.myapplication;
 
 import android.app.Activity;
-import android.content.ClipData;
+
+import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
+
 import android.os.Bundle;
 
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
-import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.myapplication.dummy.DummyContent;
-import com.example.myapplication.ItemDetailActivity;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+
+import java.time.Instant;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -50,6 +55,7 @@ public class ItemDetailFragment extends Fragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
+
     public ItemDetailFragment() {
     }
 
@@ -78,16 +84,44 @@ public class ItemDetailFragment extends Fragment {
         return getResources().getIdentifier("drawable/" + imageName, null, getActivity().getPackageName());
     }
 
+    public void showEdit(){
+        EditText editText = this.getActivity().findViewById(R.id.item_detail_editable);
+        TextView textView = this.getActivity().findViewById(R.id.item_detail);
+
+        editText.setVisibility(View.VISIBLE);
+        textView.setVisibility(View.GONE);
+    }
+
+    public void showText(){
+        EditText editText = this.getActivity().findViewById(R.id.item_detail_editable);
+        TextView textView = this.getActivity().findViewById(R.id.item_detail);
+
+        editText.setVisibility(View.GONE);
+        textView.setVisibility(View.VISIBLE);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.item_detail, container, false);
+        EditText descriptionEdit = rootView.findViewById(R.id.item_detail_editable);
+        descriptionEdit.setVisibility(View.GONE);
 
+        Button map_btn = rootView.findViewById(R.id.view_map);
+
+        map_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent home = new Intent(getActivity(), MapsActivity.class);
+                startActivity(home);
+            }
+        });
         // Show the dummy content as text in a TextView.
         if (!(mySharedPreferences.getString(KEY_NAME,null).equals(mItem.author_name))){
             ((ItemDetailActivity)getActivity()).hideFab();
         }
         if (mItem != null) {
+            descriptionEdit.setText(mItem.description);
             ((TextView) rootView.findViewById(R.id.item_detail)).setText(mItem.description);
             ((ImageView) rootView.findViewById(R.id.item_image)).setImageResource(getImageID(mItem.image));
         }

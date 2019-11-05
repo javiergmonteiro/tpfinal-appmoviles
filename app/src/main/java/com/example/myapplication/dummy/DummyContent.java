@@ -64,12 +64,16 @@ public class DummyContent {
         public final String description;
         public final String image;
         public final String author_name;
+        public final String alt;
+        public final String lat;
 
-        public DummyItem(String id, String description, String image, String author_name) {
+        public DummyItem(String id, String description, String image, String author_name,String alt,String lat) {
             this.id = id;
             this.description = description;
             this.image = image;
             this.author_name = author_name;
+            this.alt = alt;
+            this.lat = lat;
         }
 
         @Override

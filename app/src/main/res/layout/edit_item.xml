@@ -5,38 +5,39 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="15dp"
-    tools:context=".NewItemActivity"
+    tools:context=".ItemEdit"
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/textViewedit"
         android:layout_width="match_parent"
         android:layout_height="43dp"
-        android:text="Nuevo momento"
+        android:text="Editar descripcion"
         android:textAlignment="center"
-        android:textSize="30dp" />
+        android:textSize="30dp"
+        android:layout_margin="30dp"/>
 
     <EditText
-        android:id="@+id/editText5"
+        android:id="@+id/edit_description"
         android:layout_width="match_parent"
         android:layout_height="148dp"
         android:ems="10"
         android:gravity="start|top"
-        android:inputType="textMultiLine"
-        android:text="Añade una descripcion..." />
-
-    <EditText
-        android:id="@+id/editText2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Tags (opcional)" />
+        android:layout_margin="20dp"
+        android:inputType="textMultiLine"/>
 
     <Button
-        android:id="@+id/button_new_item"
+        android:id="@+id/button_save"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Añade una imagen" />
+        android:layout_margin="10dp"
+        android:text="Guardar" />
+
+    <Button
+        android:id="@+id/button_edit_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="Cancelar" />
 
 </LinearLayout>

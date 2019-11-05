@@ -49,6 +49,7 @@ public class ItemListActivity extends AppCompatActivity {
     private SharedPreferences.Editor mEditor;
     private static final String SHARED_PREF_NAME = "username";
     private static final String KEY_NAME = "key_username";
+    private static final String KEY_MOMENT = "key_moment";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,7 +139,10 @@ public class ItemListActivity extends AppCompatActivity {
                     Context context = view.getContext();
                     Intent intent = new Intent(context, ItemDetailActivity.class);
                     intent.putExtra(ItemDetailFragment.ARG_ITEM_ID, item.id);
-
+                    mySharedPreferences = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+                    SharedPreferences.Editor editor = mySharedPreferences.edit();
+                    editor.putString(KEY_MOMENT, item.id);
+                    editor.apply();
                     context.startActivity(intent);
                 }
             }

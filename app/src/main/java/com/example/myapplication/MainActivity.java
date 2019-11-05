@@ -49,7 +49,9 @@ public class MainActivity extends Activity  {
                 String tags = c.getString(3);
                 String image = c.getString(4);
                 String date = c.getString(5);
-                dummyContent.addItem(new DummyContent.DummyItem(id,descripcion,image,autor));
+                String alt = c.getString(6);
+                String lat = c.getString(7);
+                dummyContent.addItem(new DummyContent.DummyItem(id,descripcion,image,autor,alt,lat));
             }
 
         //dummyContent.addItem(new DummyContent.DummyItem("1","Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen","source1","javier"));
