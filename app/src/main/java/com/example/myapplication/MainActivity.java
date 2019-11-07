@@ -18,7 +18,6 @@ import com.example.myapplication.databases.DatabaseHelper;
 
 import com.example.myapplication.dummy.DummyContent;
 
-import java.util.List;
 
 public class MainActivity extends Activity  {
     Button b1,b2;
@@ -34,25 +33,8 @@ public class MainActivity extends Activity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         helper = new DatabaseHelper(this);
-        SQLiteDatabase db = helper.open();
 
-        DummyContent dummyContent = new DummyContent();
         SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
-
-        dummyContent.removeItems();
-
-        Cursor c = db.rawQuery("SELECT * FROM moments",null);
-            for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
-                String id = c.getString(0);
-                String autor = c.getString(1);
-                String descripcion = c.getString(2);
-                String tags = c.getString(3);
-                String image = c.getString(4);
-                String date = c.getString(5);
-                String alt = c.getString(6);
-                String lat = c.getString(7);
-                dummyContent.addItem(new DummyContent.DummyItem(id,descripcion,image,autor,alt,lat));
-            }
 
         //dummyContent.addItem(new DummyContent.DummyItem("1","Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen","source1","javier"));
         //dummyContent.addItem(new DummyContent.DummyItem("2","Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen","source2", "javier"));
@@ -90,6 +72,7 @@ public class MainActivity extends Activity  {
                     alertDialog.setMessage("incorrect login");
                     alertDialog.show();
                 }
+                db.close();
             }
         });
 

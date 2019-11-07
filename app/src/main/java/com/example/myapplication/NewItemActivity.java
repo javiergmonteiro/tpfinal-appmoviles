@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,6 +23,8 @@ public class NewItemActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_item);
+
+
 
         final Activity activity = this;
 
@@ -68,7 +71,8 @@ public class NewItemActivity extends Activity {
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK)
         {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
-            //imageView.setImageBitmap(photo);
+            ImageView myimage = findViewById(R.id.moment_image);
+            myimage.setImageBitmap(photo);
         }
     }
 }

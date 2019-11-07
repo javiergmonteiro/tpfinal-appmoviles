@@ -1,11 +1,10 @@
 package com.example.myapplication;
 
-import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.icu.util.MeasureUnit;
-import android.media.Image;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,8 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
 
+import com.example.myapplication.databases.DatabaseHelper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -26,8 +25,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.myapplication.dummy.DummyContent;
-
-import java.lang.reflect.Field;
 import java.util.List;
 
 /**
@@ -50,6 +47,8 @@ public class ItemListActivity extends AppCompatActivity {
     private static final String SHARED_PREF_NAME = "username";
     private static final String KEY_NAME = "key_username";
     private static final String KEY_MOMENT = "key_moment";
+    DatabaseHelper helper;
+    private static final DummyContent dummyContent = new DummyContent();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +58,22 @@ public class ItemListActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
+        helper = new DatabaseHelper(this);
+        SQLiteDatabase db = helper.open();
+
+        dummyContent.removeItems();
+        Cursor c = db.rawQuery("SELECT * FROM moments",null);
+        for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
+            String id = c.getString(0);
+            String autor = c.getString(1);
+            String descripcion = c.getString(2);
+            String tags = c.getString(3);
+            String image = c.getString(4);
+            String date = c.getString(5);
+            String alt = c.getString(6);
+            String lat = c.getString(7);
+            dummyContent.addItem(new DummyContent.DummyItem(id,descripcion,image,autor,alt,lat));
+        }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -67,6 +82,7 @@ public class ItemListActivity extends AppCompatActivity {
                 try{
                     Intent newitem = new Intent(ItemListActivity.this, NewItemActivity.class);
                     startActivity(newitem);
+                    finish();
                 } catch (Exception e){
                     e.printStackTrace();
                 }

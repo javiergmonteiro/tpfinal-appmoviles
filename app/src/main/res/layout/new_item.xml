@@ -1,20 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@id/content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="15dp"
+    android:layout_centerHorizontal="true">
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     tools:context=".NewItemActivity"
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/textView"
         android:layout_width="match_parent"
-        android:layout_height="43dp"
-        android:text="Nuevo momento"
+        android:layout_height="50dp"
+        android:text="Nuevo Momento"
+        android:textSize="23dp"
         android:textAlignment="center"
-        android:textSize="30dp" />
+        android:textColor="#FFFFFF"
+        android:padding="6dp"
+        android:background="@color/colorPrimary"/>
 
     <EditText
         android:id="@+id/editText5"
@@ -23,6 +30,7 @@
         android:ems="10"
         android:gravity="start|top"
         android:inputType="textMultiLine"
+        android:layout_margin="20dp"
         android:text="Añade una descripcion..." />
 
     <EditText
@@ -31,12 +39,42 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
+        android:layout_margin="20dp"
         android:text="Tags (opcional)" />
 
     <Button
         android:id="@+id/button_new_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:text="Añade una imagen" />
 
+    <ImageView
+        android:id="@+id/moment_image"
+        android:src="@drawable/noimage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:adjustViewBounds="true"/>
+
+
+    <Button
+        android:id="@+id/save_moment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+
+        android:text="Guardar Momento"/>
+    <Button
+        android:id="@+id/cancel_moment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="30dp"
+        android:text="Cancelar"/>
+
 </LinearLayout>
+</ScrollView>

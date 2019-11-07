@@ -46,7 +46,7 @@ public class ItemDetailActivity extends AppCompatActivity {
             public void onClick(View view){
                 Intent edit = new Intent(ItemDetailActivity.this, ItemEdit.class);
                 startActivity(edit);
-
+                finish();
                 //Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
             }
         });
