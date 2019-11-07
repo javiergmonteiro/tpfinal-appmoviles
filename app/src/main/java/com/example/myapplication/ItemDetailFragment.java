@@ -1,31 +1,23 @@
 package com.example.myapplication;
 
 import android.app.Activity;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
-
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
-
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
-
 import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.example.myapplication.dummy.DummyContent;
 
 
-import java.time.Instant;
+import java.io.File;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -123,7 +115,19 @@ public class ItemDetailFragment extends Fragment {
         if (mItem != null) {
             descriptionEdit.setText(mItem.description);
             ((TextView) rootView.findViewById(R.id.item_detail)).setText(mItem.description);
-            ((ImageView) rootView.findViewById(R.id.item_image)).setImageResource(getImageID(mItem.image));
+
+            String spath = mItem.image;
+
+            if (spath.contains("/data/user")){
+
+                File path = new File(mItem.image);
+                ImageView imageView = (ImageView) rootView.findViewById(R.id.item_image);
+                imageView.setImageBitmap(BitmapFactory.decodeFile(path.getAbsolutePath()));
+            }
+
+            else{
+                ((ImageView) rootView.findViewById(R.id.item_image)).setImageResource(getImageID(mItem.image));
+            }
         }
 
         return rootView;

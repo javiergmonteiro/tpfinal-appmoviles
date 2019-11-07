@@ -5,16 +5,20 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.myapplication.databases.DatabaseHelper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,6 +29,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.myapplication.dummy.DummyContent;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 
 /**
@@ -35,7 +44,7 @@ import java.util.List;
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class ItemListActivity extends AppCompatActivity {
+public class ItemListActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -49,11 +58,14 @@ public class ItemListActivity extends AppCompatActivity {
     private static final String KEY_MOMENT = "key_moment";
     DatabaseHelper helper;
     private static final DummyContent dummyContent = new DummyContent();
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_list);
+        //mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.container);
+        //mSwipeRefreshLayout.setOnRefreshListener(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -82,7 +94,6 @@ public class ItemListActivity extends AppCompatActivity {
                 try{
                     Intent newitem = new Intent(ItemListActivity.this, NewItemActivity.class);
                     startActivity(newitem);
-                    finish();
                 } catch (Exception e){
                     e.printStackTrace();
                 }
@@ -118,6 +129,16 @@ public class ItemListActivity extends AppCompatActivity {
                 default:
                     return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onRefresh() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //mSwipeRefreshLayout.setRefreshing(false);
+            }
+        }, 2000);
     }
 
     private void logout() {
@@ -190,7 +211,18 @@ public class ItemListActivity extends AppCompatActivity {
             String descripcion = '"' + mValues.get(position).description + '"';
             holder.mIdView.setText(autor);
             holder.mContentView.setText(descripcion);
-            holder.mImageView.setImageResource(getImageID(mValues.get(position).image));
+
+            String spath = mValues.get(position).image;
+
+            if (spath.contains("/data/user")){
+
+                File path = new File(mValues.get(position).image);
+                holder.mImageView.setImageBitmap(BitmapFactory.decodeFile(path.getAbsolutePath()));
+            }
+
+            else{
+                holder.mImageView.setImageResource(getImageID(mValues.get(position).image));
+            }
 
             holder.itemView.setTag(mValues.get(position));
             holder.itemView.setOnClickListener(mOnClickListener);
