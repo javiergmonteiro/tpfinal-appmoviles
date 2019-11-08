@@ -2,6 +2,7 @@ package com.example.myapplication;
 
 import android.app.Activity;
 
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
@@ -51,6 +52,8 @@ public class ItemEdit extends Activity {
                     toast.show();
                 }
                 finally {
+                    Intent itemlist = new Intent(ItemEdit.this,ItemListActivity.class);
+                    startActivity(itemlist);
                     finish();
                 }
             }
@@ -58,8 +61,18 @@ public class ItemEdit extends Activity {
         bt2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent itemlist = new Intent(ItemEdit.this,ItemListActivity.class);
                 finish();
+                startActivity(itemlist);
             }
         });
+    }
+
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+        Intent itemlist = new Intent(ItemEdit.this,ItemListActivity.class);
+        finish();
+        startActivity(itemlist);
     }
 }

@@ -1,13 +1,21 @@
 package com.example.myapplication;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+
+import com.example.myapplication.databases.DatabaseHelper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.ActionBar;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 /**
  * An activity representing a single Item detail screen. This
@@ -17,10 +25,18 @@ import android.view.MenuItem;
  */
 public class ItemDetailActivity extends AppCompatActivity {
 
+    private static final String SHARED_PREF_NAME = "username";
+    private static final String KEY_MOMENT = "key_moment";
+    private SharedPreferences mySharedPreferences;
+    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_detail);
+
+        DatabaseHelper helper = new DatabaseHelper(this);
+        final SQLiteDatabase db = helper.open();
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
 
@@ -28,6 +44,7 @@ public class ItemDetailActivity extends AppCompatActivity {
         //mapFragment.getMapAsync(this);
 
         FloatingActionButton fab = (FloatingActionButton) this.findViewById(R.id.fab);
+        FloatingActionButton del = this.findViewById(R.id.delete);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -36,6 +53,47 @@ public class ItemDetailActivity extends AppCompatActivity {
                 startActivity(edit);
                 finish();
                 //Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+            }
+        });
+
+        del.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(ItemDetailActivity.this);
+                builder.setTitle("Seleccione una opcion");
+                builder.setMessage("¿Quiere borrar este momento?");
+                mySharedPreferences = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+                final String moment = mySharedPreferences.getString(KEY_MOMENT,null);
+                builder.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String query = "DELETE FROM moments WHERE id = "+moment;
+                        try{
+                            db.execSQL(query);
+                            Toast toast = Toast.makeText(getApplicationContext(),"Momento eliminado", Toast.LENGTH_SHORT);
+                            toast.show();
+                        }
+                        catch (Exception e){
+                            e.printStackTrace();
+                        }
+                        finally {
+                            db.close();
+                            Intent itemlist = new Intent(ItemDetailActivity.this,ItemListActivity.class);
+                            finish();
+                            startActivity(itemlist);
+                        }
+                    }
+                });
+
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        return;
+                    }
+                });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
         });
 
@@ -71,6 +129,19 @@ public class ItemDetailActivity extends AppCompatActivity {
     public void hideFab(){
         FloatingActionButton fab = (FloatingActionButton) this.findViewById(R.id.fab);
         fab.hide();
+    }
+
+    public void hideDel(){
+        FloatingActionButton del = (FloatingActionButton) this.findViewById(R.id.delete);
+        del.hide();
+    }
+
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+        Intent itemlist = new Intent(ItemDetailActivity.this,ItemListActivity.class);
+        finish();
+        startActivity(itemlist);
     }
 
     @Override

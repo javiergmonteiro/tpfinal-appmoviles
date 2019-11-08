@@ -180,6 +180,7 @@ public class ItemListActivity extends AppCompatActivity implements SwipeRefreshL
                     SharedPreferences.Editor editor = mySharedPreferences.edit();
                     editor.putString(KEY_MOMENT, item.id);
                     editor.apply();
+                    finish();
                     context.startActivity(intent);
                 }
             }

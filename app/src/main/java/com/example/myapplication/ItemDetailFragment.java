@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.app.Activity;
+import android.content.ClipData;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
@@ -111,6 +112,7 @@ public class ItemDetailFragment extends Fragment {
         // Show the dummy content as text in a TextView.
         if (!(mySharedPreferences.getString(KEY_NAME,null).equals(mItem.author_name))){
             ((ItemDetailActivity)getActivity()).hideFab();
+            ((ItemDetailActivity) getActivity()).hideDel();
         }
         if (mItem != null) {
             descriptionEdit.setText(mItem.description);

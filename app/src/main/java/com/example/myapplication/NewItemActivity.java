@@ -105,7 +105,9 @@ public class NewItemActivity extends Activity {
         cancelMoment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent itemlist = new Intent(NewItemActivity.this,ItemListActivity.class);
                 finish();
+                startActivity(itemlist);
             }
         });
 
@@ -123,7 +125,6 @@ public class NewItemActivity extends Activity {
                 try{
                     db.execSQL(query);
                     Toast.makeText(getApplicationContext(), "Momento guardado!", Toast.LENGTH_LONG).show();
-                    finish();
                 }
                 catch (Exception e){
                     Toast.makeText(getApplicationContext(), "No se pudo ejecutar la query", Toast.LENGTH_LONG).show();
@@ -131,6 +132,9 @@ public class NewItemActivity extends Activity {
                 }
                 finally{
                     db.close();
+                    Intent itemlist = new Intent(NewItemActivity.this,ItemListActivity.class);
+                    finish();
+                    startActivity(itemlist);
                 }
 
             }
@@ -157,6 +161,14 @@ public class NewItemActivity extends Activity {
                 //Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
             }
         }
+    }
+
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+        Intent itemlist = new Intent(NewItemActivity.this,ItemListActivity.class);
+        finish();
+        startActivity(itemlist);
     }
 
     @Override
