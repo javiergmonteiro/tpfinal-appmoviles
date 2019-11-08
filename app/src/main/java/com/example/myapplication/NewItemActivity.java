@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
@@ -21,10 +22,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
 import java.util.Calendar;
 
 import com.example.myapplication.databases.DatabaseHelper;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -34,7 +35,7 @@ public class NewItemActivity extends Activity {
 
     private static final int CAMERA_REQUEST = 1888;
     private static final int MY_CAMERA_PERMISSION_CODE = 100;
-    private File output=null;
+    private File output = null;
 
     DatabaseHelper helper;
     private static final String SHARED_PREF_NAME = "username";
@@ -42,6 +43,7 @@ public class NewItemActivity extends Activity {
     private SharedPreferences mySharedPreferences;
     private String imageName = "";
     private File mypath;
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,21 +53,38 @@ public class NewItemActivity extends Activity {
         final SQLiteDatabase db = helper.open();
 
         mySharedPreferences = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
-        final String author = mySharedPreferences.getString(KEY_NAME,null);
+        final String author = mySharedPreferences.getString(KEY_NAME, null);
         final Date currentTime = Calendar.getInstance().getTime();
         final ContextWrapper cw = new ContextWrapper(getApplicationContext());
         File directory = cw.getDir("momentosImages", Context.MODE_PRIVATE);
-        imageName = author + "-" + currentTime +".jpg";
-        mypath= new File(directory,imageName);
-        //LocationManager locationManager = (LocationManager)getSystemService(this.LOCATION_SERVICE);
-
+        imageName = author + "-" + currentTime + ".jpg";
+        mypath = new File(directory, imageName);
 
         final Activity activity = this;
 
         Button photoButton = (Button) this.findViewById(R.id.button_new_item);
         Button saveMoment = (Button) this.findViewById(R.id.save_moment);
+        Button cancelMoment = (Button) this.findViewById(R.id.cancel_moment);
         final EditText description = this.findViewById(R.id.moment_description);
         final EditText tags = this.findViewById(R.id.moment_tags);
+        final Location location;
+
+        LocationManager locationManager = (LocationManager)getApplicationContext().getSystemService(LOCATION_SERVICE);
+
+
+        if (ContextCompat.checkSelfPermission(getApplicationContext(),Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getApplicationContext(),Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+        }
+        else{
+            location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+        }
+
+        final String lat = Double.toString(location.getLatitude());
+        final String lng =  Double.toString(location.getLongitude());
+        //Toast.makeText(this,"latitud: "+lat , Toast.LENGTH_LONG).show();
+
+
 
         photoButton.setOnClickListener(new View.OnClickListener()
         {
@@ -83,6 +102,13 @@ public class NewItemActivity extends Activity {
             }
         });
 
+        cancelMoment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
         saveMoment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -93,9 +119,11 @@ public class NewItemActivity extends Activity {
                 String mytags = tags.getText().toString();
                 String myimage = mypath.toString();
 
-                String query = "INSERT INTO moments (user,description,tags,image,timestamp,altitud,latitud) VALUES ('"+author+"','"+mydescription+"','"+mytags+"','"+myimage+"','"+currentTime+"','1','1')";
+                String query = "INSERT INTO moments (user,description,tags,image,timestamp,altitud,latitud) VALUES ('"+author+"','"+mydescription+"','"+mytags+"','"+myimage+"','"+currentTime+"','"+lat+"','"+lng+"')";
                 try{
                     db.execSQL(query);
+                    Toast.makeText(getApplicationContext(), "Momento guardado!", Toast.LENGTH_LONG).show();
+                    finish();
                 }
                 catch (Exception e){
                     Toast.makeText(getApplicationContext(), "No se pudo ejecutar la query", Toast.LENGTH_LONG).show();
