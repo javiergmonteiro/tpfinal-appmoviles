@@ -84,7 +84,7 @@ public class ItemListActivity extends AppCompatActivity implements SwipeRefreshL
             String date = c.getString(5);
             String alt = c.getString(6);
             String lat = c.getString(7);
-            dummyContent.addItem(new DummyContent.DummyItem(id,descripcion,image,autor,alt,lat));
+            dummyContent.addItem(new DummyContent.DummyItem(id,descripcion,image,autor,tags,date,alt,lat));
         }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);

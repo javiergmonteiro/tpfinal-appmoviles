@@ -77,29 +77,10 @@ public class ItemDetailFragment extends Fragment {
         return getResources().getIdentifier("drawable/" + imageName, null, getActivity().getPackageName());
     }
 
-    public void showEdit(){
-        EditText editText = this.getActivity().findViewById(R.id.item_detail_editable);
-        TextView textView = this.getActivity().findViewById(R.id.item_detail);
-
-        editText.setVisibility(View.VISIBLE);
-        textView.setVisibility(View.GONE);
-    }
-
-    public void showText(){
-        EditText editText = this.getActivity().findViewById(R.id.item_detail_editable);
-        TextView textView = this.getActivity().findViewById(R.id.item_detail);
-
-        editText.setVisibility(View.GONE);
-        textView.setVisibility(View.VISIBLE);
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.item_detail, container, false);
-        EditText descriptionEdit = rootView.findViewById(R.id.item_detail_editable);
-        descriptionEdit.setVisibility(View.GONE);
-
         Button map_btn = rootView.findViewById(R.id.view_map);
 
         map_btn.setOnClickListener(new View.OnClickListener() {
@@ -115,9 +96,9 @@ public class ItemDetailFragment extends Fragment {
             ((ItemDetailActivity) getActivity()).hideDel();
         }
         if (mItem != null) {
-            descriptionEdit.setText(mItem.description);
             ((TextView) rootView.findViewById(R.id.item_detail)).setText(mItem.description);
-
+            ((TextView) rootView.findViewById(R.id.date)).setText(mItem.date);
+            ((TextView) rootView.findViewById(R.id.tags_content)).setText(mItem.tags);
             String spath = mItem.image;
 
             if (spath.contains("/data/user")){

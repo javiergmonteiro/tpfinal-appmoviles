@@ -31,7 +31,7 @@
         android:gravity="start|top"
         android:inputType="textMultiLine"
         android:layout_margin="20dp"
-        android:text="Añade una descripcion..." />
+        android:hint="Añade una descripcion..." />
 
     <EditText
         android:id="@+id/moment_tags"
@@ -40,7 +40,7 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:layout_margin="20dp"
-        android:text="Tags (opcional)" />
+        android:hint="Tags (opcional)" />
 
     <Button
         android:id="@+id/button_new_item"

@@ -43,6 +43,10 @@ public class DummyContent {
         ITEM_MAP.clear();
     }
 
+    public static void sortItems(){
+        return;
+    }
+
     //private static DummyItem createDummyItem(int position) {
     //    return new DummyItem(String.valueOf(position), "Item " + position, makeDetails(position));
     //}
@@ -64,14 +68,18 @@ public class DummyContent {
         public final String description;
         public final String image;
         public final String author_name;
+        public final String tags;
+        public final String date;
         public final String alt;
         public final String lat;
 
-        public DummyItem(String id, String description, String image, String author_name,String alt,String lat) {
+        public DummyItem(String id, String description, String image, String author_name,String tags,String date,String alt,String lat) {
             this.id = id;
             this.description = description;
             this.image = image;
             this.author_name = author_name;
+            this.tags = tags;
+            this.date = date;
             this.alt = alt;
             this.lat = lat;
         }
