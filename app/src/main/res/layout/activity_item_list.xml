@@ -24,6 +24,42 @@
                 android:layout_height="?attr/actionBarSize"
                 app:popupTheme="@style/AppTheme.PopupOverlay" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:descendantFocusability="beforeDescendants"
+                android:focusableInTouchMode="true"
+                android:background="@color/colorPrimary"
+                android:gravity="center|left">
+
+                <EditText
+                    android:id="@+id/sarchbox"
+                    android:layout_width="0dp"
+                    android:layout_weight=".90"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@color/white"
+                    android:textColor="@color/black"
+                    android:hint="Buscar Momento"
+                    android:imeOptions="actionDone"
+                    android:gravity="center" >
+                </EditText>
+                <Button
+                    android:id="@+id/launch_search"
+                    android:layout_width="0dp"
+                    android:layout_weight=".10"
+                    android:layout_height="48dp"
+                    android:background="@color/colorPrimary"
+                    android:drawableStart="@drawable/places_ic_search"
+                    android:drawableTint="@color/white"
+                    android:layout_marginRight="3dp"/>
+
+            </LinearLayout>
+
         </com.google.android.material.appbar.AppBarLayout>
 
         <FrameLayout

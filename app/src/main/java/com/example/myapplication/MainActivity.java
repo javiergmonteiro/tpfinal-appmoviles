@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import com.example.myapplication.databases.DatabaseHelper;
@@ -27,6 +28,7 @@ public class MainActivity extends Activity  {
 
     private static final String SHARED_PREF_NAME = "username";
     private static final String KEY_NAME = "key_username";
+    private static final String KEY_SEARCH = "key_search";
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +37,10 @@ public class MainActivity extends Activity  {
         helper = new DatabaseHelper(this);
 
         SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+        final SharedPreferences.Editor editor = sp.edit();
+
+        editor.putString(KEY_SEARCH,"null");
+        editor.apply();
 
         //dummyContent.addItem(new DummyContent.DummyItem("1","Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen","source1","javier"));
         //dummyContent.addItem(new DummyContent.DummyItem("2","Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen Una descripción para esta imagen","source2", "javier"));
@@ -44,6 +50,8 @@ public class MainActivity extends Activity  {
         ed1 = (EditText)findViewById(R.id.editText);
         ed2 = (EditText)findViewById(R.id.editText2);
         b2 = (Button)findViewById(R.id.button2);
+
+
 
         if (sp.getString(KEY_NAME,null) != null){
             Intent home = new Intent(MainActivity.this, ItemListActivity.class);
@@ -59,8 +67,6 @@ public class MainActivity extends Activity  {
                 String[] args = new String[]{user,password};
                 Cursor c = db.rawQuery("SELECT * FROM USERS where ( user = ? and password= ?)",args);
                 if (c.moveToFirst()){
-                    SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sp.edit();
                     editor.putString(KEY_NAME, user);
                     editor.apply();
                     Intent home = new Intent(MainActivity.this, ItemListActivity.class);
@@ -69,7 +75,7 @@ public class MainActivity extends Activity  {
                 }
                 else{
                     AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
-                    alertDialog.setMessage("incorrect login");
+                    alertDialog.setMessage("Incorrect Login");
                     alertDialog.show();
                 }
                 db.close();

@@ -19,14 +19,19 @@ import com.example.myapplication.databases.DatabaseHelper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import android.os.Handler;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.myapplication.dummy.DummyContent;
 
@@ -54,7 +59,7 @@ public class ItemListActivity extends AppCompatActivity implements SwipeRefreshL
     private SharedPreferences mySharedPreferences;
     private SharedPreferences.Editor mEditor;
     private static final String SHARED_PREF_NAME = "username";
-    private static final String KEY_NAME = "key_username";
+    private static final String KEY_SEARCH = "key_search";
     private static final String KEY_MOMENT = "key_moment";
     DatabaseHelper helper;
     private static final DummyContent dummyContent = new DummyContent();
@@ -66,26 +71,77 @@ public class ItemListActivity extends AppCompatActivity implements SwipeRefreshL
         setContentView(R.layout.activity_item_list);
         //mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.container);
         //mSwipeRefreshLayout.setOnRefreshListener(this);
-
+        mySharedPreferences = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
         helper = new DatabaseHelper(this);
         SQLiteDatabase db = helper.open();
 
+        final EditText searchtext = findViewById(R.id.sarchbox);
+        final Button launch_search = findViewById(R.id.launch_search);
+
         dummyContent.removeItems();
-        Cursor c = db.rawQuery("SELECT * FROM moments",null);
-        for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
-            String id = c.getString(0);
-            String autor = c.getString(1);
-            String descripcion = c.getString(2);
-            String tags = c.getString(3);
-            String image = c.getString(4);
-            String date = c.getString(5);
-            String alt = c.getString(6);
-            String lat = c.getString(7);
-            dummyContent.addItem(new DummyContent.DummyItem(id,descripcion,image,autor,tags,date,alt,lat));
+
+        if (!(mySharedPreferences.getString(KEY_SEARCH,"null") == "null")){
+            String search = mySharedPreferences.getString(KEY_SEARCH,null);
+            String query = "SELECT * FROM moments where tags like '%"+search+"'";
+            Cursor c = db.rawQuery(query,null);
+            if (c.moveToFirst()) {
+                for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
+                    String id = c.getString(0);
+                    String autor = c.getString(1);
+                    String descripcion = c.getString(2);
+                    String tags = c.getString(3);
+                    String image = c.getString(4);
+                    String date = c.getString(5);
+                    String alt = c.getString(6);
+                    String lat = c.getString(7);
+                    dummyContent.addItem(new DummyContent.DummyItem(id, descripcion, image, autor, tags, date, alt, lat));
+                }
+            }
+
+            else{
+                Toast toast = Toast.makeText(getApplicationContext(),"No se encontraron resultados", Toast.LENGTH_SHORT);
+            }
+
+            db.close();
         }
+
+        else{
+            Cursor c = db.rawQuery("SELECT * FROM moments",null);
+            for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
+                String id = c.getString(0);
+                String autor = c.getString(1);
+                String descripcion = c.getString(2);
+                String tags = c.getString(3);
+                String image = c.getString(4);
+                String date = c.getString(5);
+                String alt = c.getString(6);
+                String lat = c.getString(7);
+                dummyContent.addItem(new DummyContent.DummyItem(id,descripcion,image,autor,tags,date,alt,lat));
+            }
+            db.close();
+        }
+
+        launch_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String mysearch = searchtext.getText().toString();
+                mySharedPreferences = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+                mEditor = mySharedPreferences.edit();
+                if (mysearch == "") {
+                    mEditor.putString(KEY_SEARCH,"null");
+                    mEditor.apply();
+                }
+                else{
+                    mEditor.putString(KEY_SEARCH,mysearch);
+                    mEditor.apply();
+                }
+                finish();
+                startActivity(getIntent());
+            }
+        });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -112,6 +168,7 @@ public class ItemListActivity extends AppCompatActivity implements SwipeRefreshL
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
@@ -244,7 +301,6 @@ public class ItemListActivity extends AppCompatActivity implements SwipeRefreshL
                 mIdView = (TextView) view.findViewById(R.id.id_text);
                 mContentView = (TextView) view.findViewById(R.id.content);
                 mImageView = (ImageView) view.findViewById(R.id.image);
-
             }
         }
     }
