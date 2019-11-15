@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Shared Memories</string>
     <string name="title_item_detail">Momentos</string>
     <string name="google_maps_key">AIzaSyCFQnd5-fgkCHlXED1uKbUZBy9DJfnT5fs</string>
 </resources>

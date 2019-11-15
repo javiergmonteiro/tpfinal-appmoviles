@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import androidx.fragment.app.Fragment;
@@ -19,6 +21,8 @@ import com.example.myapplication.dummy.DummyContent;
 
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -83,6 +87,7 @@ public class ItemDetailFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.item_detail, container, false);
         Button map_btn = rootView.findViewById(R.id.view_map);
 
+        ImageView imagedetail = rootView.findViewById(R.id.item_image);
         map_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -112,6 +117,17 @@ public class ItemDetailFragment extends Fragment {
                 ((ImageView) rootView.findViewById(R.id.item_image)).setImageResource(getImageID(mItem.image));
             }
         }
+
+        imagedetail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final File path = new File(mItem.image);
+                Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                Uri contentUri = Uri.fromFile(path);
+                mediaScanIntent.setData(contentUri);
+                getActivity().sendBroadcast(mediaScanIntent);
+            }
+        });
 
         return rootView;
     }
